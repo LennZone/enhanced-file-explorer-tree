@@ -1,4 +1,4 @@
-# obsidian-enhanced-file-explorer-tree
+# Enhanced file explorer tree
 
 This repository contains a custom theme plugin for [Obsidian](https://obsidian.md/), designed to enhance the file explorer tree by making the folder structure more visually intuitive. The primary goal is to clearly illustrate which files belong to which folders through subtle yet effective styling.
 
