@@ -47,3 +47,11 @@
 .nav-files-container > div > .tree-item.nav-folder:before {
     content: none;
 }
+
+/*mobile styling*/
+.is-mobile .tree-item-children.nav-folder-children:before {
+    bottom: 16px;
+}
+.is-mobile .tree-item.nav-folder:before {
+    top: 16px;
+}
