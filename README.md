@@ -2,9 +2,7 @@
 
 This repository contains a custom theme plugin for [Obsidian](https://obsidian.md/), designed to enhance the file explorer tree by making the folder structure more visually intuitive. The primary goal is to clearly illustrate which files belong to which folders through subtle yet effective styling.
 
-![Screenshot](thumbnail.png)
-
-![Screenshot](enhanced-file-explorer-tree.png)
+<img src="thumbnail.png" alt="thumbnail" width="100%"/>
 
 ## Features
 
@@ -12,3 +10,5 @@ This repository contains a custom theme plugin for [Obsidian](https://obsidian.m
 - **Light and Dark Mode Support**: Seamlessly adapts to your system’s color scheme (`light dark`) with customizable background colors.
 - **Subtle Visual Cues**: Uses CSS variables (e.g., `--bg-color`) to create faint lines that improve readability without cluttering the interface.
 - **Minimalist Approach**: Keeps the original [Obsidian](https://obsidian.md/) design and is only focusing on visual functionality.
+
+<img src="enhanced-file-explorer-tree.png" alt="fullscreen showcase of the theme" width="100%"/>
