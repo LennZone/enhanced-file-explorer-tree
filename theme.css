@@ -55,3 +55,7 @@
 .is-mobile .tree-item.nav-folder:before {
     top: 16px;
 }
+
+div.tree-item.nav-file:has( *[data-path*="_about_.md"]) {
+    display: none;
+}
