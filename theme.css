@@ -56,6 +56,8 @@
     top: 16px;
 }
 
-div.tree-item.nav-file:has( *[data-path*="_about_.md"]) {
+div.tree-item.nav-file:has( *[data-path*="_about_.md"]),
+.hide-folder-note .is-folder-note,
+.tree-item.nav-file:has(.is-folder-note):before {
     display: none;
 }
