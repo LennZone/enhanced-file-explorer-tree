@@ -62,3 +62,7 @@ div.tree-item.nav-file:has( *[data-path*="_about_.md"]),
 .nav-files-container:not(.show-unsupported) .tree-item.nav-file:has(.is-unsupported):before {
     display: none;
 }
+
+.nav-files-container:not(.show-unsupported) .is-unsupported {
+    display: flex;
+}
