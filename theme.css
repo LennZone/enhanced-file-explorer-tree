@@ -1,67 +1,107 @@
-:root {
-    color-scheme: light dark;
-    --bg-clr-opacity: 0.12;
-    --bg-color: light-dark(rgba(0, 0, 0, var(--bg-clr-opacity)), rgba(255,255,255,var(--bg-clr-opacity)));
+/* Enhanced file explorer tree
+   Connected tree lines in the file explorer, everything else stays Obsidian:
+     Folder
+     ├─ file
+     ├─ folder
+     │  └─ file
+     └─ file
+   Each item inside a folder draws its own piece: the vertical line on the
+   item (::before) and the horizontal stub on its row (.tree-item-self::after).
+   The last item of a folder draws both as one corner ("└"). All offsets come
+   from Obsidian's variables, so the lines follow its layout. */
+
+/* Settings: override these in a CSS snippet */
+body {
+    --eft-line-color: var(--nav-indentation-guide-color, var(--background-modifier-border));
+    --eft-line-width: var(--nav-indentation-guide-width, 1px);
+    /* Space between the end of a stub and the folder arrow or file name */
+    --eft-stub-gap: var(--size-4-1);
+    /* Rows are separated by a margin; vertical lines bridge it */
+    --eft-row-gap: var(--nav-item-margin-bottom, 0px);
 }
 
-.tree-item.nav-file,
-.tree-item.nav-folder,
-.tree-item-children.nav-folder-children {
+/* Obsidian uses a unitless 0 here on mobile, which calc() cannot use as a length */
+body.is-mobile {
+    --eft-row-gap: 0px;
+}
+
+.nav-files-container {
+    /* Obsidian's own indentation guide is replaced by the tree lines. It stays
+       in the layout (transparent), so indentation is unchanged. */
+    --nav-indentation-guide-color: transparent;
+    /* Where a row's content starts, relative to its item. Obsidian indents the
+       row by the same amount as the item, so this is constant. */
+    --eft-content-x: var(--size-4-6);
+    /* Folder arrows sit left of the content: a box of --size-4-4 (see
+       .tree-item-icon in Obsidian) with the arrow, a fixed 10px wide, centered */
+    --eft-arrow-x: calc(var(--eft-content-x) - var(--size-4-5) + (var(--size-4-4) - 10px) / 2);
+    /* Center of the vertical line relative to a child item: where Obsidian's
+       indentation guide is, below the parent's folder arrow */
+    --eft-guide-x: calc(-1 * (var(--nav-item-children-padding-start, var(--nav-item-children-padding-left, 4px)) + var(--nav-indentation-guide-width, 1px) / 2));
+    /* Start and length of a stub, from the right edge of the vertical line */
+    --eft-stub-x: calc(var(--eft-guide-x) + var(--eft-line-width) / 2);
+    --eft-stub-file: calc(var(--eft-content-x) - var(--eft-stub-gap) - var(--eft-stub-x));
+    --eft-stub-folder: calc(var(--eft-arrow-x) - var(--eft-stub-gap) - var(--eft-stub-x));
+}
+
+.nav-files-container .nav-folder-children > .tree-item {
     position: relative;
 }
 
-.tree-item.nav-file:before,
-.tree-item.nav-folder:before,
-.tree-item-children.nav-folder-children:before {
-    content: '';
+.nav-files-container .nav-folder-children > .tree-item::before,
+.nav-files-container .nav-folder-children > .tree-item > .tree-item-self::after {
+    content: "";
     position: absolute;
-    background: var(--bg-color);
+    pointer-events: none;
 }
 
-.tree-item.nav-file:before,
-.tree-item.nav-folder:before {
-    height: 1px;
-    width: 20px;
-    top: 50%;
-    transform: translate(0, -50%);
-    margin-inline-start: -3px;
+/* Vertical line: from the gap above the item down through its subtree.
+   Top-level items are not inside .nav-folder-children and get no lines. */
+.nav-files-container .nav-folder-children > .tree-item::before {
+    inset-inline-start: calc(var(--eft-guide-x) - var(--eft-line-width) / 2);
+    top: calc(-1 * var(--eft-row-gap));
+    bottom: 0;
+    width: var(--eft-line-width);
+    background-color: var(--eft-line-color);
 }
 
-.tree-item.nav-folder:before {
-    top: 13px;
-    width: 5px;
+/* Horizontal stub at the middle of the row. The inline offset is left at
+   auto, so the stub starts where the row's content starts (its static
+   position in the flex row, like Obsidian's folder arrow) and is pulled
+   back to the vertical line with a negative margin. */
+.nav-files-container .nav-folder-children > .tree-item > .tree-item-self::after {
+    top: calc(50% - var(--eft-line-width) / 2);
+    height: var(--eft-line-width);
+    width: var(--eft-stub-file);
+    margin-inline-start: calc(var(--eft-stub-x) - var(--eft-content-x));
+    background-color: var(--eft-line-color);
 }
 
-.tree-item-children.nav-folder-children {
-    border-left-width: 0;
+.nav-files-container .nav-folder-children > .tree-item.nav-folder > .tree-item-self::after {
+    width: var(--eft-stub-folder);
 }
 
-.tree-item-children.nav-folder-children:before {
-    left: 0;
-    top: 0;
-    bottom: 12px;
-    width: 1px;
-}
-
-.nav-files-container > div > .tree-item.nav-file:before,
-.nav-files-container > div > .tree-item.nav-folder:before {
+/* Last item of a folder: no line below it. Its stub becomes a corner that
+   also draws the vertical part from the gap above down to the middle of the
+   row. One box with two borders, so the lines never overlap (the default
+   color is translucent). Obsidian's virtual-scroll spacer is the first
+   child, so the last item is :last-child. */
+.nav-files-container .nav-folder-children > .tree-item:last-child::before {
     content: none;
 }
 
-/*mobile styling*/
-.is-mobile .tree-item-children.nav-folder-children:before {
-    bottom: 16px;
-}
-.is-mobile .tree-item.nav-folder:before {
-    top: 16px;
-}
-
-div.tree-item.nav-file:has( *[data-path*="_about_.md"]),
-.hide-folder-note .is-folder-note,
-.nav-files-container:not(.show-unsupported) .tree-item.nav-file:has(.is-unsupported):before {
-    display: none;
+.nav-files-container .nav-folder-children > .tree-item:last-child > .tree-item-self::after {
+    box-sizing: border-box;
+    top: calc(-1 * var(--eft-row-gap));
+    bottom: calc(50% - var(--eft-line-width) / 2);
+    height: auto;
+    width: calc(var(--eft-stub-file) + var(--eft-line-width));
+    margin-inline-start: calc(var(--eft-guide-x) - var(--eft-line-width) / 2 - var(--eft-content-x));
+    border-inline-start: var(--eft-line-width) solid var(--eft-line-color);
+    border-block-end: var(--eft-line-width) solid var(--eft-line-color);
+    background-color: transparent;
 }
 
-.nav-files-container:not(.show-unsupported) .is-unsupported {
-    display: flex;
+.nav-files-container .nav-folder-children > .tree-item.nav-folder:last-child > .tree-item-self::after {
+    width: calc(var(--eft-stub-folder) + var(--eft-line-width));
 }
