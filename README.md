@@ -40,3 +40,15 @@ body {
     --eft-line-width: 2px;
 }
 ```
+
+## Troubleshooting
+
+If the lines look wrong, please [open an issue](https://github.com/LennZone/enhanced-file-explorer-tree/issues/new/choose) with a screenshot and your Obsidian version.
+
+## Contributing
+
+Contributions are welcome. Please read the [contributing guide](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) first.
+
+## License
+
+Enhanced file explorer tree is released under the [MIT License](LICENSE). Versions up to 1.1.0 were released under the [Unlicense](https://unlicense.org/).
